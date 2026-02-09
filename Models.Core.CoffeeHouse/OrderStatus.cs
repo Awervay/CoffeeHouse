@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Library.Core.CoffeeHouse;
+namespace Models.Core.CoffeeHouse;
 
-public class TypeProducts:ClassBase
+public enum OrderStatus
 {
-  
+    New,
+    InProgress,
+    Completed
 }
+
