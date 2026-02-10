@@ -15,7 +15,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasMaxLength(50);
 
         builder.Property(o => o.CreatedAt)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
+
 
         builder.HasOne(o => o.Branch)
             .WithMany(b => b.Orders)
