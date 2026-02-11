@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Models.Core.CoffeeHouse;
 
-
 namespace DbContext.Configurations.CoffeeHousesConfigurations;
 
 public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>

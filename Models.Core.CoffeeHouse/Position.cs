@@ -9,7 +9,7 @@ namespace Models.Core.CoffeeHouse;
 public class Position // Должность сотрудника
 {
     public int Id { get; set; }
-    public string? Title { get; set; }
-    public ICollection<Employee>? Employees { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public ICollection<Employee> Employees { get; set; } = new List<Employee>();
 }
 

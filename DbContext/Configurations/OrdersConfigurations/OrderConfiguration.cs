@@ -17,7 +17,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
-
         builder.HasOne(o => o.Branch)
             .WithMany(b => b.Orders)
             .HasForeignKey(o => o.BranchId)
