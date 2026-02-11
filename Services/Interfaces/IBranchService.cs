@@ -1,10 +1,11 @@
-﻿using Models.Core.CoffeeHouse;
+﻿using Contracts.CoffeeHouse;
+using Models.Core.CoffeeHouse;
 
 namespace Services.Interfaces;
 
 public interface IBranchService
 {
-    Task<IEnumerable<Branch>> GetAllAsync();
+    Task<IEnumerable<GetBranches>> GetAllAsync();
     Task<Branch?> GetByIdAsync(int id);
     Task<Branch> CreateAsync(Branch entity);
     Task<Branch> UpdateAsync(Branch entity);

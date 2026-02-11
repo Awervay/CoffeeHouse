@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+	 
+  </ItemGroup>
+
+
+	<ItemGroup>
+		<ProjectReference Include="..\DbContext\DbContext.csproj" />
+		<ProjectReference Include="..\Models.Core.CoffeeHouse\Models.Core.CoffeeHouse.csproj" />
+		<ProjectReference Include="..\Services\Service.CoffeeHouse.csproj" />
+		<ProjectReference Include="..\Services\Services.csproj" />
+	</ItemGroup>
+
+</Project>

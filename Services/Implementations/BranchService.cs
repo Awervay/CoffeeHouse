@@ -2,6 +2,7 @@
 using Models.Core.CoffeeHouse;
 using Services.Interfaces;
 using Data.DbContext;
+using Contracts.CoffeeHouse;
 
 namespace Services.Implementations;
 
@@ -14,7 +15,7 @@ public class BranchService : IBranchService
         _context = context;
     }
 
-    public async Task<IEnumerable<Branch>> GetAllAsync()
+    public async Task<IEnumerable<GetBranches>> GetAllAsync()
         => await _context.Branches.ToListAsync();
 
     public async Task<Branch?> GetByIdAsync(int id)

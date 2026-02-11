@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Contracts.CoffeeHouse
 {
-    public class CoffeeHouse
+    internal class GetBranchRequest
     {
-        
     }
 }
