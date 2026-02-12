@@ -9,10 +9,10 @@ namespace Models.Core.CoffeeHouse;
 public class Employee // Сотрудник
 {
     public int Id { get; set; }
-    public string? FullName { get; set; }
+    public string FullName { get; set; } = string.Empty; 
     public int PositionId { get; set; }
-    public Position? Position { get; set; }
+    public Position Position { get; set; } = null!; 
     public int BranchId { get; set; }
-    public Branch? Branch { get; set; }
+    public Branch Branch { get; set; } = null!;
 }
 

@@ -13,7 +13,7 @@ public class Order // Заказы
     public string? CustomerName { get; set; }
     public DateTime CreatedAt { get; set; }
     public int BranchId { get; set; }
-    public Branch? Branch { get; set; }
-    public ICollection<OrderItem>? Items { get; set; }
-    public OrderStatus Status { get; set; }
+    public Branch Branch { get; set; } = null!; 
+    public int Status { get; set; }
+    public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
 }
