@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-using Models.Core.CoffeeHouse;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Core.DAL.Stocks;
 
 namespace DbContext.Configurations.CoffeeHousesConfigurations;
 
@@ -22,9 +22,8 @@ public class PromotionConfiguration : IEntityTypeConfiguration<Promotion>
             .IsRequired();
 
         builder.HasOne(p => p.Branch)
-            .WithMany(b => b.Promotions)
+            .WithMany()
             .HasForeignKey(p => p.BranchId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
-

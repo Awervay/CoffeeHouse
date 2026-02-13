@@ -22,13 +22,11 @@ namespace DbContext.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Branch", b =>
+            modelBuilder.Entity("Core.DAL.Branches.Branch", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -40,8 +38,8 @@ namespace DbContext.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("CoffeeChainId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CoffeeChainId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Country")
                         .IsRequired()
@@ -55,16 +53,14 @@ namespace DbContext.Migrations
                     b.ToTable("Branches");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.BranchProduct", b =>
+            modelBuilder.Entity("Core.DAL.Branches.BranchProduct", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("boolean");
@@ -73,8 +69,8 @@ namespace DbContext.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("numeric(10,2)");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -85,13 +81,11 @@ namespace DbContext.Migrations
                     b.ToTable("BranchProducts");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.CoffeeChain", b =>
+            modelBuilder.Entity("Core.DAL.Branches.CoffeeChain", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -103,44 +97,14 @@ namespace DbContext.Migrations
                     b.ToTable("CoffeeChains");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Employee", b =>
+            modelBuilder.Entity("Core.DAL.Orders.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<int>("PositionId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BranchId");
-
-                    b.HasIndex("PositionId");
-
-                    b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -164,19 +128,17 @@ namespace DbContext.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.OrderItem", b =>
+            modelBuilder.Entity("Core.DAL.Orders.OrderItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("BranchProductId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("BranchProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("PriceAtPurchase")
                         .HasPrecision(10, 2)
@@ -194,31 +156,11 @@ namespace DbContext.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Position", b =>
+            modelBuilder.Entity("Core.DAL.Orders.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Positions");
-                });
-
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Category")
                         .IsRequired()
@@ -239,16 +181,56 @@ namespace DbContext.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Promotion", b =>
+            modelBuilder.Entity("Core.DAL.Staff.Employee", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<Guid>("PositionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("PositionId");
+
+                    b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("Core.DAL.Staff.Position", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Positions");
+                });
+
+            modelBuilder.Entity("Core.DAL.Stocks.Promotion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .HasMaxLength(300)
@@ -272,9 +254,9 @@ namespace DbContext.Migrations
                     b.ToTable("Promotions");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Branch", b =>
+            modelBuilder.Entity("Core.DAL.Branches.Branch", b =>
                 {
-                    b.HasOne("Models.Core.CoffeeHouse.CoffeeChain", "CoffeeChain")
+                    b.HasOne("Core.DAL.Branches.CoffeeChain", "CoffeeChain")
                         .WithMany("Branches")
                         .HasForeignKey("CoffeeChainId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -283,48 +265,27 @@ namespace DbContext.Migrations
                     b.Navigation("CoffeeChain");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.BranchProduct", b =>
+            modelBuilder.Entity("Core.DAL.Branches.BranchProduct", b =>
                 {
-                    b.HasOne("Models.Core.CoffeeHouse.Branch", "Branch")
+                    b.HasOne("Core.DAL.Branches.Branch", "Branch")
                         .WithMany("BranchProducts")
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Core.CoffeeHouse.Product", "Product")
-                        .WithMany()
+                    b.HasOne("Core.DAL.Orders.Product", null)
+                        .WithMany("BranchProducts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Branch");
-
-                    b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Employee", b =>
+            modelBuilder.Entity("Core.DAL.Orders.Order", b =>
                 {
-                    b.HasOne("Models.Core.CoffeeHouse.Branch", "Branch")
-                        .WithMany("Employees")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Core.CoffeeHouse.Position", "Position")
-                        .WithMany("Employees")
-                        .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Branch");
-
-                    b.Navigation("Position");
-                });
-
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Order", b =>
-                {
-                    b.HasOne("Models.Core.CoffeeHouse.Branch", "Branch")
-                        .WithMany("Orders")
+                    b.HasOne("Core.DAL.Branches.Branch", "Branch")
+                        .WithMany()
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -332,15 +293,15 @@ namespace DbContext.Migrations
                     b.Navigation("Branch");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.OrderItem", b =>
+            modelBuilder.Entity("Core.DAL.Orders.OrderItem", b =>
                 {
-                    b.HasOne("Models.Core.CoffeeHouse.BranchProduct", "BranchProduct")
+                    b.HasOne("Core.DAL.Branches.BranchProduct", "BranchProduct")
                         .WithMany()
                         .HasForeignKey("BranchProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Core.CoffeeHouse.Order", "Order")
+                    b.HasOne("Core.DAL.Orders.Order", "Order")
                         .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -351,10 +312,29 @@ namespace DbContext.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Promotion", b =>
+            modelBuilder.Entity("Core.DAL.Staff.Employee", b =>
                 {
-                    b.HasOne("Models.Core.CoffeeHouse.Branch", "Branch")
-                        .WithMany("Promotions")
+                    b.HasOne("Core.DAL.Branches.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.DAL.Staff.Position", "Position")
+                        .WithMany("Employees")
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Position");
+                });
+
+            modelBuilder.Entity("Core.DAL.Stocks.Promotion", b =>
+                {
+                    b.HasOne("Core.DAL.Branches.Branch", "Branch")
+                        .WithMany()
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -362,28 +342,27 @@ namespace DbContext.Migrations
                     b.Navigation("Branch");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Branch", b =>
+            modelBuilder.Entity("Core.DAL.Branches.Branch", b =>
                 {
                     b.Navigation("BranchProducts");
-
-                    b.Navigation("Employees");
-
-                    b.Navigation("Orders");
-
-                    b.Navigation("Promotions");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.CoffeeChain", b =>
+            modelBuilder.Entity("Core.DAL.Branches.CoffeeChain", b =>
                 {
                     b.Navigation("Branches");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Order", b =>
+            modelBuilder.Entity("Core.DAL.Orders.Order", b =>
                 {
                     b.Navigation("Items");
                 });
 
-            modelBuilder.Entity("Models.Core.CoffeeHouse.Position", b =>
+            modelBuilder.Entity("Core.DAL.Orders.Product", b =>
+                {
+                    b.Navigation("BranchProducts");
+                });
+
+            modelBuilder.Entity("Core.DAL.Staff.Position", b =>
                 {
                     b.Navigation("Employees");
                 });

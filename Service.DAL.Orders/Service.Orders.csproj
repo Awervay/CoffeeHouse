@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contract.Orders\Contract.Orders.csproj" />
+    <ProjectReference Include="..\Core.DAl.Orders\Core.DAL.Orders.csproj" />
+    <ProjectReference Include="..\DbContext\DbContext.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Models.Core.CoffeeHouse;
+using Core.DAL.Branches;
 
 namespace DbContext.Configurations.CoffeeHousesConfigurations;
 
@@ -15,11 +15,5 @@ public class BranchProductConfiguration : IEntityTypeConfiguration<BranchProduct
             .WithMany(b => b.BranchProducts)
             .HasForeignKey(bp => bp.BranchId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne(bp => bp.Product)
-            .WithMany()
-            .HasForeignKey(bp => bp.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }
-

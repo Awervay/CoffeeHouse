@@ -19,7 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Models.Core.CoffeeHouse\Models.Core.CoffeeHouse.csproj" />
+    <ProjectReference Include="..\Core.DAl.Branches\Core.DAL.Branches.csproj" />
+    <ProjectReference Include="..\Core.DAl.Orders\Core.DAL.Orders.csproj" />
+    <ProjectReference Include="..\Core.DAl.Staff\Core.DAL.Staff.csproj" />
+    <ProjectReference Include="..\Core.DAl.Stocks\Core.DAL.Stocks.csproj" />
   </ItemGroup>
 
 </Project>

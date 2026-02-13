@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Models.Core.CoffeeHouse;
+using Core.DAL.Orders;
 
 namespace DbContext.Configurations.CoffeeHousesConfigurations;
 
