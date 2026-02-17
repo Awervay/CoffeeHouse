@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core.DAL.Branches;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Models.Core.CoffeeHouse;
 
 namespace DbContext.Configurations.CoffeeHousesConfigurations;
 

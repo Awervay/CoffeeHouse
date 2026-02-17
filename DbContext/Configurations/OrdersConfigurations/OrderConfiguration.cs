@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-using Models.Core.CoffeeHouse;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Core.DAL.Orders;
 
 namespace DbContext.Configurations.OrdersConfigurations;
 
@@ -18,9 +18,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
         builder.HasOne(o => o.Branch)
-            .WithMany(b => b.Orders)
+            .WithMany()
             .HasForeignKey(o => o.BranchId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
-

@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-using Models.Core.CoffeeHouse;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Core.DAL.Staff;
 
 namespace DbContext.Configurations.CoffeeHousesConfigurations;
 
@@ -18,9 +18,8 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(e => e.Branch)
-            .WithMany(b => b.Employees)
+            .WithMany()
             .HasForeignKey(e => e.BranchId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
-

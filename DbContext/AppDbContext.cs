@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Models.Core.CoffeeHouse;
+using Core.DAL.Orders;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using Core.DAL.Branches;
+using Core.DAL.Staff;
+using Core.DAL.Stocks;
 
 namespace Data.DbContext
 {

@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbContext\DbContext.csproj" />
-    <ProjectReference Include="..\Models.Core.CoffeeHouse\Models.Core.CoffeeHouse.csproj" />
   </ItemGroup>
 
 </Project>
