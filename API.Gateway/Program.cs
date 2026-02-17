@@ -4,6 +4,13 @@ using API.Gateway.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Explicit loading of configurations from JSON files
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -18,7 +25,7 @@ builder.Services.AddCoffeeHouseServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// CORS (если нужен фронт)
+// CORS (If you need a front)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
