@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Core.DAL.Orders;
+using Core.DAL.Branches;
 
 namespace DbContext.Configurations.OrdersConfigurations;
 
@@ -18,5 +19,10 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
             .WithMany(o => o.Items)
             .HasForeignKey(oi => oi.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(oi => oi.BranchProduct)
+            .WithMany()
+            .HasForeignKey(oi => oi.BranchProductId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

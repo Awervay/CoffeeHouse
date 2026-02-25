@@ -43,9 +43,7 @@ public class CoffeeChainController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<UpdateCoffeeChainResponse>> Update(Guid id, UpdateCoffeeChainRequest request)
     {
-        request.Id = id;
-
-        var result = await _service.UpdateAsync(request);
+        var result = await _service.UpdateAsync(id, request);
         return Ok(result);
     }
 

@@ -10,6 +10,6 @@ public class CoffeeChainConfiguration : IEntityTypeConfiguration<CoffeeChain>
     {
         builder.Property(c => c.Name)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(150);
     }
 }

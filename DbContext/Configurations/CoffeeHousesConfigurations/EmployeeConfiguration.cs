@@ -10,7 +10,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
     {
         builder.Property(e => e.FullName)
             .IsRequired()
-            .HasMaxLength(120);
+            .HasMaxLength(150);
 
         builder.HasOne(e => e.Position)
             .WithMany(p => p.Employees)
