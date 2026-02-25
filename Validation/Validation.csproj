@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contract.Branches\Contract.Branches.csproj" />
+    <ProjectReference Include="..\Contract.Orders\Contract.Orders.csproj" />
+    <ProjectReference Include="..\Contract.Staff\Contract.Staff.csproj" />
+    <ProjectReference Include="..\Contract.Stocks\Contract.Stocks.csproj" />
+  </ItemGroup>
+
+</Project>

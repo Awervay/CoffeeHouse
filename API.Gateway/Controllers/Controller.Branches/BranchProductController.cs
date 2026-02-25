@@ -50,9 +50,7 @@ public class BranchProductController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<UpdateBranchProductResponse>> Update(Guid id, UpdateBranchProductRequest request)
     {
-        request.Id = id;
-
-        var result = await _service.UpdateAsync(request);
+        var result = await _service.UpdateAsync(id, request);
         return Ok(result);
     }
 
