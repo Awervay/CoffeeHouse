@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Core.DAL.Branches;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Core.DAL.Branches;
-
-namespace DbContext.Configurations.CoffeeHousesConfigurations;
 
 public class BranchProductConfiguration : IEntityTypeConfiguration<BranchProduct>
 {

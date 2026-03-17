@@ -1,4 +1,6 @@
-﻿public class CreateBranchProductRequest
+﻿namespace Contract.Branches.Models.BranchProduct;
+
+public class CreateBranchProductRequest
 {
     public Guid BranchId { get; set; }
     public Guid ProductId { get; set; }

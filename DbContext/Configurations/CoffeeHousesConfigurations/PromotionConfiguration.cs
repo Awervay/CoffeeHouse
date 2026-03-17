@@ -10,10 +10,10 @@ public class PromotionConfiguration : IEntityTypeConfiguration<Promotion>
     {
         builder.Property(p => p.Title)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(150);
 
         builder.Property(p => p.Description)
-            .HasMaxLength(300);
+            .HasMaxLength(500);
 
         builder.Property(p => p.StartDate)
             .IsRequired();

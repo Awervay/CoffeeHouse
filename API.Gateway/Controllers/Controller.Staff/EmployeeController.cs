@@ -50,9 +50,7 @@ public class EmployeeController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<UpdateEmployeeResponse>> Update(Guid id, UpdateEmployeeRequest request)
     {
-        request.Id = id;
-
-        var result = await _service.UpdateAsync(request);
+        var result = await _service.UpdateAsync(id, request);
         return Ok(result);
     }
 

@@ -1,78 +1,55 @@
-﻿using Contract.Branches.Models.CoffeeChain;
+﻿using AutoMapper;
+using Contract.Branches.Models.CoffeeChain;
 using Core.DAL.Branches;
 using Data.DbContext;
-using Microsoft.EntityFrameworkCore;
 using Service.Branches.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Service.Branches.Implementations;
 
 public class CoffeeChainService : ICoffeeChainService
 {
     private readonly AppDbContext _context;
+    private readonly IMapper _mapper;
 
-    public CoffeeChainService(AppDbContext context)
+    public CoffeeChainService(AppDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<GetCoffeeChainResponse?> GetAsync(GetCoffeeChainRequest request)
     {
         var entity = await _context.CoffeeChains.FindAsync(request.Id);
-
-        if (entity == null)
-            return null;
-
-        return new GetCoffeeChainResponse
-        {
-            Id = entity.Id,
-            Name = entity.Name
-        };
+        return entity == null ? null : _mapper.Map<GetCoffeeChainResponse>(entity);
     }
 
     public async Task<IEnumerable<GetCoffeeChainsResponse>> GetAllAsync(GetCoffeeChainsRequest request)
     {
         var chains = await _context.CoffeeChains.ToListAsync();
-
-        return chains.Select(c => new GetCoffeeChainsResponse
-        {
-            Id = c.Id,
-            Name = c.Name
-        });
+        return _mapper.Map<IEnumerable<GetCoffeeChainsResponse>>(chains);
     }
 
     public async Task<CreateCoffeeChainResponse> CreateAsync(CreateCoffeeChainRequest request)
     {
-        var entity = new CoffeeChain
-        {
-            Name = request.Name
-        };
+        var entity = _mapper.Map<CoffeeChain>(request);
 
         _context.CoffeeChains.Add(entity);
         await _context.SaveChangesAsync();
 
-        return new CreateCoffeeChainResponse
-        {
-            Id = entity.Id,
-            Name = entity.Name
-        };
+        return _mapper.Map<CreateCoffeeChainResponse>(entity);
     }
 
-    public async Task<UpdateCoffeeChainResponse> UpdateAsync(UpdateCoffeeChainRequest request)
+    public async Task<UpdateCoffeeChainResponse> UpdateAsync(Guid id, UpdateCoffeeChainRequest request)
     {
-        var entity = await _context.CoffeeChains.FindAsync(request.Id);
-
+        var entity = await _context.CoffeeChains.FindAsync(id);
         if (entity == null)
             throw new Exception("Coffee chain not found");
 
-        entity.Name = request.Name;
-
+        _mapper.Map(request, entity);
         await _context.SaveChangesAsync();
 
-        return new UpdateCoffeeChainResponse
-        {
-            Id = entity.Id,
-            Name = entity.Name
-        };
+        return _mapper.Map<UpdateCoffeeChainResponse>(entity);
     }
 
     public async Task<DeleteCoffeeChainResponse> DeleteAsync(DeleteCoffeeChainRequest request)

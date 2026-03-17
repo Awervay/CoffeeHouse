@@ -1,4 +1,5 @@
-﻿using Contract.Orders.Models.OrderItem;
+﻿using AutoMapper;
+using Contract.Orders.Models.OrderItem;
 using Core.DAL.Orders;
 using Data.DbContext;
 using Microsoft.EntityFrameworkCore;
@@ -9,27 +10,18 @@ namespace Service.Orders.Implementations;
 public class OrderItemService : IOrderItemService
 {
     private readonly AppDbContext _context;
+    private readonly IMapper _mapper;
 
-    public OrderItemService(AppDbContext context)
+    public OrderItemService(AppDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<GetOrderItemResponse?> GetAsync(GetOrderItemRequest request)
     {
         var entity = await _context.OrderItems.FindAsync(request.Id);
-
-        if (entity == null)
-            return null;
-
-        return new GetOrderItemResponse
-        {
-            Id = entity.Id,
-            Quantity = entity.Quantity,
-            PriceAtPurchase = entity.PriceAtPurchase,
-            OrderId = entity.OrderId,
-            BranchProductId = entity.BranchProductId
-        };
+        return entity == null ? null : _mapper.Map<GetOrderItemResponse>(entity);
     }
 
     public async Task<IEnumerable<GetOrderItemsResponse>> GetAllAsync(GetOrderItemsRequest request)
@@ -40,50 +32,29 @@ public class OrderItemService : IOrderItemService
             query = query.Where(i => i.OrderId == request.OrderId.Value);
 
         var list = await query.ToListAsync();
-
-        return list.Select(i => new GetOrderItemsResponse
-        {
-            Id = i.Id,
-            Quantity = i.Quantity,
-            PriceAtPurchase = i.PriceAtPurchase
-        });
+        return _mapper.Map<IEnumerable<GetOrderItemsResponse>>(list);
     }
 
     public async Task<CreateOrderItemResponse> CreateAsync(CreateOrderItemRequest request)
     {
-        var entity = new OrderItem
-        {
-            Quantity = request.Quantity,
-            PriceAtPurchase = request.PriceAtPurchase,
-            OrderId = request.OrderId,
-            BranchProductId = request.BranchProductId
-        };
+        var entity = _mapper.Map<OrderItem>(request);
 
         _context.OrderItems.Add(entity);
         await _context.SaveChangesAsync();
 
-        return new CreateOrderItemResponse
-        {
-            Id = entity.Id
-        };
+        return _mapper.Map<CreateOrderItemResponse>(entity);
     }
 
-    public async Task<UpdateOrderItemResponse> UpdateAsync(UpdateOrderItemRequest request)
+    public async Task<UpdateOrderItemResponse> UpdateAsync(Guid id, UpdateOrderItemRequest request)
     {
-        var entity = await _context.OrderItems.FindAsync(request.Id);
-
+        var entity = await _context.OrderItems.FindAsync(id);
         if (entity == null)
             throw new Exception("Order item not found");
 
-        entity.Quantity = request.Quantity;
-        entity.PriceAtPurchase = request.PriceAtPurchase;
-
+        _mapper.Map(request, entity);
         await _context.SaveChangesAsync();
 
-        return new UpdateOrderItemResponse
-        {
-            Id = entity.Id
-        };
+        return _mapper.Map<UpdateOrderItemResponse>(entity);
     }
 
     public async Task<DeleteOrderItemResponse> DeleteAsync(DeleteOrderItemRequest request)

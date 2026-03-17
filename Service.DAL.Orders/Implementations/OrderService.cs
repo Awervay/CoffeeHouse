@@ -1,37 +1,28 @@
-﻿using Contract.Orders.Models.Order;
-using Core.DAL.Orders;
+﻿using AutoMapper;
+using Contract.Orders.Models.Order;
 using Core.DAL.Orders.Enum;
+using Core.DAL.Orders;
 using Data.DbContext;
-using Microsoft.EntityFrameworkCore;
 using Service.Orders.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Service.Orders.Implementations;
 
 public class OrderService : IOrderService
 {
     private readonly AppDbContext _context;
+    private readonly IMapper _mapper;
 
-    public OrderService(AppDbContext context)
+    public OrderService(AppDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<GetOrderResponse?> GetAsync(GetOrderRequest request)
     {
         var entity = await _context.Orders.FindAsync(request.Id);
-
-        if (entity == null)
-            return null;
-
-        return new GetOrderResponse
-        {
-            Id = entity.Id,
-            OrderNumber = entity.OrderNumber,
-            CustomerName = entity.CustomerName,
-            CreatedAt = entity.CreatedAt,
-            BranchId = entity.BranchId,
-            Status = entity.Status
-        };
+        return entity == null ? null : _mapper.Map<GetOrderResponse>(entity);
     }
 
     public async Task<IEnumerable<GetOrdersResponse>> GetAllAsync(GetOrdersRequest request)
@@ -45,51 +36,33 @@ public class OrderService : IOrderService
             query = query.Where(o => o.Status == request.Status.Value);
 
         var list = await query.ToListAsync();
-
-        return list.Select(o => new GetOrdersResponse
-        {
-            Id = o.Id,
-            OrderNumber = o.OrderNumber,
-            Status = o.Status
-        });
+        return _mapper.Map<IEnumerable<GetOrdersResponse>>(list);
     }
 
     public async Task<CreateOrderResponse> CreateAsync(CreateOrderRequest request)
     {
-        var entity = new Order
-        {
-            OrderNumber = await GenerateOrderNumberAsync(),
-            CustomerName = request.CustomerName,
-            CreatedAt = DateTime.UtcNow,
-            BranchId = request.BranchId,
-            Status = (int)OrderStatus.New
-        };
+        var entity = _mapper.Map<Order>(request);
+
+        entity.OrderNumber = await GenerateOrderNumberAsync();
+        entity.CreatedAt = DateTime.UtcNow;
+        entity.Status = (int)OrderStatus.New;
 
         _context.Orders.Add(entity);
         await _context.SaveChangesAsync();
 
-        return new CreateOrderResponse
-        {
-            Id = entity.Id,
-            OrderNumber = entity.OrderNumber
-        };
+        return _mapper.Map<CreateOrderResponse>(entity);
     }
 
-    public async Task<UpdateOrderResponse> UpdateAsync(UpdateOrderRequest request)
+    public async Task<UpdateOrderResponse> UpdateAsync(Guid id, UpdateOrderRequest request)
     {
-        var entity = await _context.Orders.FindAsync(request.Id);
-
+        var entity = await _context.Orders.FindAsync(id);
         if (entity == null)
             throw new Exception("Order not found");
 
-        entity.Status = request.Status;
-
+        _mapper.Map(request, entity);
         await _context.SaveChangesAsync();
 
-        return new UpdateOrderResponse
-        {
-            Id = entity.Id
-        };
+        return _mapper.Map<UpdateOrderResponse>(entity);
     }
 
     public async Task<DeleteOrderResponse> DeleteAsync(DeleteOrderRequest request)

@@ -1,4 +1,5 @@
-﻿using Contract.Staff.Models.Employee;
+﻿using AutoMapper;
+using Contract.Staff.Models.Employee;
 using Core.DAL.Staff;
 using Data.DbContext;
 using Microsoft.EntityFrameworkCore;
@@ -9,26 +10,18 @@ namespace Service.Staff.Implementations;
 public class EmployeeService : IEmployeeService
 {
     private readonly AppDbContext _context;
+    private readonly IMapper _mapper;
 
-    public EmployeeService(AppDbContext context)
+    public EmployeeService(AppDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<GetEmployeeResponse?> GetAsync(GetEmployeeRequest request)
     {
         var entity = await _context.Employees.FindAsync(request.Id);
-
-        if (entity == null)
-            return null;
-
-        return new GetEmployeeResponse
-        {
-            Id = entity.Id,
-            FullName = entity.FullName,
-            PositionId = entity.PositionId,
-            BranchId = entity.BranchId
-        };
+        return entity == null ? null : _mapper.Map<GetEmployeeResponse>(entity);
     }
 
     public async Task<IEnumerable<GetEmployeesResponse>> GetAllAsync(GetEmployeesRequest request)
@@ -42,49 +35,29 @@ public class EmployeeService : IEmployeeService
             query = query.Where(e => e.PositionId == request.PositionId.Value);
 
         var list = await query.ToListAsync();
-
-        return list.Select(e => new GetEmployeesResponse
-        {
-            Id = e.Id,
-            FullName = e.FullName
-        });
+        return _mapper.Map<IEnumerable<GetEmployeesResponse>>(list);
     }
 
     public async Task<CreateEmployeeResponse> CreateAsync(CreateEmployeeRequest request)
     {
-        var entity = new Employee
-        {
-            FullName = request.FullName,
-            PositionId = request.PositionId,
-            BranchId = request.BranchId
-        };
+        var entity = _mapper.Map<Employee>(request);
 
         _context.Employees.Add(entity);
         await _context.SaveChangesAsync();
 
-        return new CreateEmployeeResponse
-        {
-            Id = entity.Id
-        };
+        return _mapper.Map<CreateEmployeeResponse>(entity);
     }
 
-    public async Task<UpdateEmployeeResponse> UpdateAsync(UpdateEmployeeRequest request)
+    public async Task<UpdateEmployeeResponse> UpdateAsync(Guid id, UpdateEmployeeRequest request)
     {
-        var entity = await _context.Employees.FindAsync(request.Id);
-
+        var entity = await _context.Employees.FindAsync(id);
         if (entity == null)
             throw new Exception("Employee not found");
 
-        entity.FullName = request.FullName;
-        entity.PositionId = request.PositionId;
-        entity.BranchId = request.BranchId;
-
+        _mapper.Map(request, entity);
         await _context.SaveChangesAsync();
 
-        return new UpdateEmployeeResponse
-        {
-            Id = entity.Id
-        };
+        return _mapper.Map<UpdateEmployeeResponse>(entity);
     }
 
     public async Task<DeleteEmployeeResponse> DeleteAsync(DeleteEmployeeRequest request)

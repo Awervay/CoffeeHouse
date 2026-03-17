@@ -1,35 +1,27 @@
-﻿using Contract.Branches.Models.BranchProduct;
+﻿using AutoMapper;
+using Contract.Branches.Models.BranchProduct;
 using Core.DAL.Branches;
 using Data.DbContext;
-using Microsoft.EntityFrameworkCore;
 using Service.Branches.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Service.Branches.Implementations;
 
 public class BranchProductService : IBranchProductService
 {
     private readonly AppDbContext _context;
+    private readonly IMapper _mapper;
 
-    public BranchProductService(AppDbContext context)
+    public BranchProductService(AppDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<GetBranchProductResponse?> GetAsync(GetBranchProductRequest request)
     {
         var entity = await _context.BranchProducts.FindAsync(request.Id);
-
-        if (entity == null)
-            return null;
-
-        return new GetBranchProductResponse
-        {
-            Id = entity.Id,
-            BranchId = entity.BranchId,
-            ProductId = entity.ProductId,
-            Price = entity.Price,
-            IsAvailable = entity.IsAvailable
-        };
+        return entity == null ? null : _mapper.Map<GetBranchProductResponse>(entity);
     }
 
     public async Task<IEnumerable<GetBranchProductsResponse>> GetAllAsync(GetBranchProductsRequest request)
@@ -43,51 +35,29 @@ public class BranchProductService : IBranchProductService
             query = query.Where(x => x.IsAvailable);
 
         var list = await query.ToListAsync();
-
-        return list.Select(x => new GetBranchProductsResponse
-        {
-            Id = x.Id,
-            ProductId = x.ProductId,
-            Price = x.Price,
-            IsAvailable = x.IsAvailable
-        });
+        return _mapper.Map<IEnumerable<GetBranchProductsResponse>>(list);
     }
 
     public async Task<CreateBranchProductResponse> CreateAsync(CreateBranchProductRequest request)
     {
-        var entity = new BranchProduct
-        {
-            BranchId = request.BranchId,
-            ProductId = request.ProductId,
-            Price = request.Price,
-            IsAvailable = request.IsAvailable
-        };
+        var entity = _mapper.Map<BranchProduct>(request);
 
         _context.BranchProducts.Add(entity);
         await _context.SaveChangesAsync();
 
-        return new CreateBranchProductResponse
-        {
-            Id = entity.Id
-        };
+        return _mapper.Map<CreateBranchProductResponse>(entity);
     }
 
-    public async Task<UpdateBranchProductResponse> UpdateAsync(UpdateBranchProductRequest request)
+    public async Task<UpdateBranchProductResponse> UpdateAsync(Guid id, UpdateBranchProductRequest request)
     {
-        var entity = await _context.BranchProducts.FindAsync(request.Id);
-
+        var entity = await _context.BranchProducts.FindAsync(id);
         if (entity == null)
             throw new Exception("Branch product not found");
 
-        entity.Price = request.Price;
-        entity.IsAvailable = request.IsAvailable;
-
+        _mapper.Map(request, entity);
         await _context.SaveChangesAsync();
 
-        return new UpdateBranchProductResponse
-        {
-            Id = entity.Id
-        };
+        return _mapper.Map<UpdateBranchProductResponse>(entity);
     }
 
     public async Task<DeleteBranchProductResponse> DeleteAsync(DeleteBranchProductRequest request)

@@ -1,88 +1,55 @@
 ﻿using Contract.Branches.Models.Branch;
 using Core.DAL.Branches;
 using Data.DbContext;
-using Microsoft.EntityFrameworkCore;
 using Service.Branches.Interfaces;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Service.Branches.Implementations;
 
 public class BranchService : IBranchService
 {
     private readonly AppDbContext _context;
+    private readonly IMapper _mapper;
 
-    public BranchService(AppDbContext context)
+    public BranchService(AppDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<GetBranchResponse?> GetAsync(GetBranchRequest request)
     {
         var entity = await _context.Branches.FindAsync(request.Id);
-
-        if (entity == null)
-            return null;
-
-        return new GetBranchResponse
-        {
-            Id = entity.Id,
-            City = entity.City,
-            Country = entity.Country,
-            Address = entity.Address,
-            CoffeeChainId = entity.CoffeeChainId
-        };
+        return entity == null ? null : _mapper.Map<GetBranchResponse>(entity);
     }
 
     public async Task<IEnumerable<GetBranchesResponse>> GetAllAsync(GetBranchesRequest request)
     {
         var branches = await _context.Branches.ToListAsync();
-
-        return branches.Select(b => new GetBranchesResponse
-        {
-            Id = b.Id,
-            City = b.City,
-            Country = b.Country
-        });
+        return _mapper.Map<IEnumerable<GetBranchesResponse>>(branches);
     }
 
     public async Task<CreateBranchResponse> CreateAsync(CreateBranchRequest request)
     {
-        var entity = new Branch
-        {
-            City = request.City,
-            Country = request.Country,
-            Address = request.Address,
-            CoffeeChainId = request.CoffeeChainId
-        };
+        var entity = _mapper.Map<Branch>(request);
 
         _context.Branches.Add(entity);
         await _context.SaveChangesAsync();
 
-        return new CreateBranchResponse
-        {
-            Id = entity.Id,
-            City = entity.City
-        };
+        return _mapper.Map<CreateBranchResponse>(entity);
     }
 
-    public async Task<UpdateBranchResponse> UpdateAsync(UpdateBranchRequest request)
+    public async Task<UpdateBranchResponse> UpdateAsync(Guid id, UpdateBranchRequest request)
     {
-        var entity = await _context.Branches.FindAsync(request.Id);
-
+        var entity = await _context.Branches.FindAsync(id);
         if (entity == null)
             throw new Exception("Branch not found");
 
-        entity.City = request.City;
-        entity.Country = request.Country;
-        entity.Address = request.Address;
-        entity.CoffeeChainId = request.CoffeeChainId;
-
+        _mapper.Map(request, entity);
         await _context.SaveChangesAsync();
 
-        return new UpdateBranchResponse
-        {
-            Id = entity.Id,
-            City = entity.City
-        };
+        return _mapper.Map<UpdateBranchResponse>(entity);
     }
 
     public async Task<DeleteBranchResponse> DeleteAsync(DeleteBranchRequest request)

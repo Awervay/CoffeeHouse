@@ -12,7 +12,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .IsRequired();
 
         builder.Property(o => o.CustomerName)
-            .HasMaxLength(50);
+            .HasMaxLength(100);
 
         builder.Property(o => o.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");

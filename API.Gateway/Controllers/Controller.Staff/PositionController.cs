@@ -43,11 +43,10 @@ public class PositionController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<UpdatePositionResponse>> Update(Guid id, UpdatePositionRequest request)
     {
-        request.Id = id;
-
-        var result = await _service.UpdateAsync(request);
+        var result = await _service.UpdateAsync(id, request);
         return Ok(result);
     }
+
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)

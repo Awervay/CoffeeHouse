@@ -1,6 +1,10 @@
 using Data.DbContext;
 using Microsoft.EntityFrameworkCore;
 using API.Gateway.Extensions;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Validation.Branch;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,16 +29,13 @@ builder.Services.AddCoffeeHouseServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// CORS (If you need a front)
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+
+// FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateBranchRequestValidator>();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
 
 var app = builder.Build();
 
@@ -44,9 +45,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-// CORS
-app.UseCors("AllowAll");
 
 app.MapControllers();
 

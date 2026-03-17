@@ -50,9 +50,7 @@ public class OrderController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<UpdateOrderResponse>> Update(Guid id, UpdateOrderRequest request)
     {
-        request.Id = id;
-
-        var result = await _service.UpdateAsync(request);
+        var result = await _service.UpdateAsync(id, request);
         return Ok(result);
     }
 

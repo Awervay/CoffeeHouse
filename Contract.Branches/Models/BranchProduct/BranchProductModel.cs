@@ -1,4 +1,6 @@
-﻿public class BranchProductModel
+﻿namespace Contract.Branches.Models.BranchProduct;
+
+public class BranchProductModel
 {
     public Guid Id { get; set; }
     public Guid BranchId { get; set; }

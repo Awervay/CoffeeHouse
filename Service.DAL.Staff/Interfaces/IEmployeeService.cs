@@ -7,6 +7,6 @@ public interface IEmployeeService
     Task<GetEmployeeResponse?> GetAsync(GetEmployeeRequest request);
     Task<IEnumerable<GetEmployeesResponse>> GetAllAsync(GetEmployeesRequest request);
     Task<CreateEmployeeResponse> CreateAsync(CreateEmployeeRequest request);
-    Task<UpdateEmployeeResponse> UpdateAsync(UpdateEmployeeRequest request);
+    Task<UpdateEmployeeResponse> UpdateAsync(Guid id, UpdateEmployeeRequest request);
     Task<DeleteEmployeeResponse> DeleteAsync(DeleteEmployeeRequest request);
 }

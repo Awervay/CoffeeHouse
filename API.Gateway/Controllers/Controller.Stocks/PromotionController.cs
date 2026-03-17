@@ -50,9 +50,7 @@ public class PromotionController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<UpdatePromotionResponse>> Update(Guid id, UpdatePromotionRequest request)
     {
-        request.Id = id;
-
-        var result = await _service.UpdateAsync(request);
+        var result = await _service.UpdateAsync(id, request);
         return Ok(result);
     }
 

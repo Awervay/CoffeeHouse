@@ -1,4 +1,5 @@
-﻿using Contract.Stocks.Models.Promotion;
+﻿using AutoMapper;
+using Contract.Stocks.Models.Promotion;
 using Core.DAL.Stocks;
 using Data.DbContext;
 using Microsoft.EntityFrameworkCore;
@@ -9,28 +10,18 @@ namespace Service.Stocks.Implementations;
 public class PromotionService : IPromotionService
 {
     private readonly AppDbContext _context;
+    private readonly IMapper _mapper;
 
-    public PromotionService(AppDbContext context)
+    public PromotionService(AppDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<GetPromotionResponse?> GetAsync(GetPromotionRequest request)
     {
         var entity = await _context.Promotions.FindAsync(request.Id);
-
-        if (entity == null)
-            return null;
-
-        return new GetPromotionResponse
-        {
-            Id = entity.Id,
-            Title = entity.Title,
-            Description = entity.Description,
-            StartDate = entity.StartDate,
-            EndDate = entity.EndDate,
-            BranchId = entity.BranchId
-        };
+        return entity == null ? null : _mapper.Map<GetPromotionResponse>(entity);
     }
 
     public async Task<IEnumerable<GetPromotionsResponse>> GetAllAsync(GetPromotionsRequest request)
@@ -47,53 +38,29 @@ public class PromotionService : IPromotionService
         }
 
         var list = await query.ToListAsync();
-
-        return list.Select(p => new GetPromotionsResponse
-        {
-            Id = p.Id,
-            Title = p.Title
-        });
+        return _mapper.Map<IEnumerable<GetPromotionsResponse>>(list);
     }
 
     public async Task<CreatePromotionResponse> CreateAsync(CreatePromotionRequest request)
     {
-        var entity = new Promotion
-        {
-            Title = request.Title,
-            Description = request.Description,
-            StartDate = request.StartDate,
-            EndDate = request.EndDate,
-            BranchId = request.BranchId
-        };
+        var entity = _mapper.Map<Promotion>(request);
 
         _context.Promotions.Add(entity);
         await _context.SaveChangesAsync();
 
-        return new CreatePromotionResponse
-        {
-            Id = entity.Id
-        };
+        return _mapper.Map<CreatePromotionResponse>(entity);
     }
 
-    public async Task<UpdatePromotionResponse> UpdateAsync(UpdatePromotionRequest request)
+    public async Task<UpdatePromotionResponse> UpdateAsync(Guid id, UpdatePromotionRequest request)
     {
-        var entity = await _context.Promotions.FindAsync(request.Id);
-
+        var entity = await _context.Promotions.FindAsync(id);
         if (entity == null)
             throw new Exception("Promotion not found");
 
-        entity.Title = request.Title;
-        entity.Description = request.Description;
-        entity.StartDate = request.StartDate;
-        entity.EndDate = request.EndDate;
-        entity.BranchId = request.BranchId;
-
+        _mapper.Map(request, entity);
         await _context.SaveChangesAsync();
 
-        return new UpdatePromotionResponse
-        {
-            Id = entity.Id
-        };
+        return _mapper.Map<UpdatePromotionResponse>(entity);
     }
 
     public async Task<DeletePromotionResponse> DeleteAsync(DeletePromotionRequest request)
